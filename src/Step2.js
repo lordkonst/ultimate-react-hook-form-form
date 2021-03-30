@@ -1,94 +1,95 @@
-import React from "react";
-import { useHistory } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers";
-import { useData } from "./DataContext";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Typography from "@material-ui/core/Typography";
-import Checkbox from "@material-ui/core/Checkbox";
-import { PrimaryButton } from "./components/PrimaryButton";
-import { MainContainer } from "./components/MainContainer";
-import { Form } from "./components/Form";
-import { Input } from "./components/Input";
-import * as yup from "yup";
-import { parsePhoneNumberFromString } from 'libphonenumber-js'
-
+import React from 'react';
+import { useData } from './DataContext';
+import { useForm } from 'react-hook-form';
+import { useHistory } from 'react-router';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers';
+import MainContainer from './components/MainContainer';
+import { FormControlLabel, Typography, Checkbox } from '@material-ui/core';
+import Form from './components/Form';
+import Input from './components/Input';
+import PrimaryButton from './components/PrimaryButton';
+import parsePhoneNumberFromString from 'libphonenumber-js';
 
 const schema = yup.object().shape({
   email: yup
     .string()
-    .email("Email should have correct format")
-    .required("Email is a required field"),
+    .email('Email must have the correct format')
+    .required('You must enter your email'),
 });
 
-const normalizePhoneNumber = (value) => {
-  const phoneNumber = parsePhoneNumberFromString(value)
-  if(!phoneNumber){
-    return value
-  }
-
-  return (
-    phoneNumber.formatInternational() 
-  );
-};
-
-export const Step2 = () => {
-  const { setValues, data } = useData();
-  const history = useHistory();
+const Step2 = () => {
+  const { data, setValues } = useData();
   const { register, handleSubmit, watch, errors } = useForm({
     defaultValues: {
       email: data.email,
-      hasPhone: data.hasPhone,
+      phone: data.hasPhone,
       phoneNumber: data.phoneNumber,
     },
-    mode: "onBlur",
+    mode: 'onBlur',
     resolver: yupResolver(schema),
   });
-  const hasPhone = watch("hasPhone");
 
-  const onSubmit = (data) => {
-    history.push("./step3");
+  const normalizePhoneNumber = phone => {
+    const phoneNumber = parsePhoneNumberFromString(phone);
+    if (!phoneNumber) return phone;
+
+    return phoneNumber.formatInternational();
+  };
+
+  const history = useHistory();
+  const onSubmit = data => {
+    history.push('/Step3');
     setValues(data);
   };
+
+  const hasPhone = watch('hasPhone');
 
   return (
     <MainContainer>
       <Typography component="h2" variant="h5">
-        🦄 Step 2
+        Step 2
       </Typography>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Input
-          ref={register}
-          id="email"
-          type="email"
-          label="Email"
           name="email"
+          type="email"
+          ref={register}
+          required
+          label="Email"
           error={!!errors.email}
           helperText={errors?.email?.message}
-          required
         />
-
         <FormControlLabel
           control={
-            <Checkbox defaultValue={data.hasPhone} defaultChecked={data.hasPhone} color="primary" inputRef={register} name="hasPhone" />
+            <Checkbox
+              defaultValue={data.hasPhone}
+              color="primary"
+              name="hasPhone"
+              defaultChecked={data.hasPhone}
+              inputRef={register}
+            />
           }
           label="Do you have a phone"
         />
-
         {hasPhone && (
           <Input
-            ref={register}
+            name="phoneNumber"
             id="phoneNumber"
+            ref={register}
             type="tel"
             label="Phone Number"
-            name="phoneNumber"
-            onChange={(event) => {
+            onChange={event => {
               event.target.value = normalizePhoneNumber(event.target.value);
             }}
           />
         )}
         <PrimaryButton>Next</PrimaryButton>
       </Form>
+      <pre>{JSON.stringify(data, null, 4)}</pre>
+      <pre>{JSON.stringify(hasPhone, null, 4)}</pre>
     </MainContainer>
   );
 };
+
+export default Step2;

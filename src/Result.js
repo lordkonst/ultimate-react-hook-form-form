@@ -1,61 +1,61 @@
-import React, { useState } from "react";
-import Confetti from "react-confetti";
-import Swal from "sweetalert2";
-import { makeStyles } from "@material-ui/core/styles";
-import { Link } from "react-router-dom";
-import { useData } from "./DataContext";
-import { MainContainer } from "./components/MainContainer";
-import { PrimaryButton } from "./components/PrimaryButton";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import InsertDriveFile from "@material-ui/icons/InsertDriveFile";
+import React, { useState } from 'react';
+import Confetti from 'react-confetti';
+import Swal from 'sweetalert2';
+import { makeStyles } from '@material-ui/core/styles';
+import { Link } from 'react-router-dom';
+import { useData } from './DataContext';
+import MainContainer from './components/MainContainer';
+import PrimaryButton from './components/PrimaryButton';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import InsertDriveFile from '@material-ui/icons/InsertDriveFile';
 
 const useStyles = makeStyles({
   root: {
-    marginBottom: "30px",
+    marginBottom: '30px',
   },
   table: {
-    marginBottom: "30px",
+    marginBottom: '30px',
   },
 });
 
-export const Result = () => {
+const Result = () => {
   const [success, setSuccess] = useState(false);
   const styles = useStyles();
   const { data } = useData();
 
-  const entries = Object.entries(data).filter((entry) => entry[0] !== "files");
+  const entries = Object.entries(data).filter(entry => entry[0] !== 'files');
   const { files } = data;
 
   const onSubmit = async () => {
     const formData = new FormData();
     if (data.files) {
-      data.files.forEach((file) => {
-        formData.append("files", file, file.name);
+      data.files.forEach(file => {
+        formData.append('files', file, file.name);
       });
     }
 
-    entries.forEach((entry) => {
+    entries.forEach(entry => {
       formData.append(entry[0], entry[1]);
     });
 
-    const res = await fetch("http://localhost:4000/", {
-      method: "POST",
+    const res = await fetch('http://localhost:4000/', {
+      method: 'POST',
       body: formData,
     });
 
     if (res.status === 200) {
-      Swal.fire("Great job!", "You've passed the challenge!", "success");
+      Swal.fire('Great job!', "You've passed the challenge!", 'success');
       setSuccess(true);
     }
   };
@@ -79,7 +79,7 @@ export const Result = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {entries.map((entry) => (
+              {entries.map(entry => (
                 <TableRow key={entry[0]}>
                   <TableCell component="th" scope="row">
                     {entry[0]}
@@ -113,3 +113,5 @@ export const Result = () => {
     </>
   );
 };
+
+export default Result;

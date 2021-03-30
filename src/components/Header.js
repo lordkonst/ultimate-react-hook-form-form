@@ -1,24 +1,24 @@
-import React from "react";
-import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, Typography } from '@material-ui/core';
+import React from 'react';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     margin: theme.spacing(3, 0, 2),
-    fontFamily: "Permanent Marker",
-    textAlign: "center",
-    fontSize: "40px",
-    color: "deeppink",
-    textShadow: "1px 1px darkmagenta",
+    fontFamily: 'Permanent Marker',
+    textAlign: 'center',
+    fontSize: '40px',
+    color: 'deeppink',
+    textShadow: '1px 1px darkmagenta',
   },
 }));
 
-export const Header = () => {
+const Header = () => {
   const styles = useStyles();
-
   return (
-    <Typography className={styles.root} component="h1" variant="h5">
-      The Ultimate Form Challenge
+    <Typography className={styles.root} component="h1">
+      The ultimate form challenge
     </Typography>
   );
 };
+
+export default Header;

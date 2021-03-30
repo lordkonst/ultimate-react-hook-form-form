@@ -1,34 +1,33 @@
-import React from "react";
-import Dropzone from "react-dropzone";
-import { Controller } from "react-hook-form";
-import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import CloudUpload from "@material-ui/icons/CloudUpload";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import InsertDriveFile from "@material-ui/icons/InsertDriveFile";
+import {
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  makeStyles,
+  Paper,
+} from '@material-ui/core';
+import { CloudUpload, InsertDriveFile } from '@material-ui/icons';
+import React from 'react';
+import Dropzone from 'react-dropzone';
+import { Controller } from 'react-hook-form';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
   root: {
-    backgroundColor: "#eee",
-    textAlign: "center",
-    cursor: "pointer",
-    color: "#333",
-    padding: "10px",
-    marginTop: "20px",
+    backgroundColor: '#eee',
+    textAlign: 'center',
+    cursor: 'pointer',
+    padding: '10px',
+    marginTop: '20px',
   },
   icon: {
-    marginTop: "16px",
-    color: "#888888",
-    fontSize: "42px",
+    marginTop: '16px',
+    color: '#888',
+    fontSize: '42px',
   },
-}));
+});
 
-export const FileInput = ({ control, name }) => {
+const FileInput = ({ control, name }) => {
   const styles = useStyles();
-
   return (
     <Controller
       control={control}
@@ -38,29 +37,29 @@ export const FileInput = ({ control, name }) => {
         <>
           <Dropzone onDrop={onChange}>
             {({ getRootProps, getInputProps }) => (
-              <Paper
-                variant="outlined"
-                className={styles.root}
-                {...getRootProps()}
-              >
+              <Paper className={styles.root} variant="outlined" {...getRootProps()}>
                 <CloudUpload className={styles.icon} />
                 <input {...getInputProps()} name={name} onBlur={onBlur} />
-                <p>Drag 'n' drop files here, or click to select files</p>
+                <p>Drag 'n' drop to upload files</p>
               </Paper>
             )}
           </Dropzone>
           <List>
-            {value.map((f, index) => (
-              <ListItem key={index}>
-                <ListItemIcon>
-                  <InsertDriveFile />
-                </ListItemIcon>
-                <ListItemText primary={f.name} secondary={f.size} />
-              </ListItem>
-            ))}
+            {value.map((file, index) => {
+              return (
+                <ListItem key={index}>
+                  <ListItemIcon>
+                    <InsertDriveFile />
+                  </ListItemIcon>
+                  <ListItemText primary={file.name} secondary={file.size} />
+                </ListItem>
+              );
+            })}
           </List>
         </>
       )}
     />
   );
 };
+
+export default FileInput;
